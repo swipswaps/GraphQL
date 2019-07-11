@@ -1,6 +1,12 @@
 {
-  "name": "lambda",
+  "name": "@ribbonblockchain/services",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "description": "Ribbon Blockchain GraphQL Backend",
+  "author": "Onuwa Nnachi Isaac <matrix4u2002@gmail.com>",
+  "private": true,
+  "devDependencies": {
+    "aws-sdk": "^2.492.0"
+  }
 }
