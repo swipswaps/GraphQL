@@ -9,3 +9,4 @@ package-lock.json
 sample
 schema.graphql
 .env
+*.zip

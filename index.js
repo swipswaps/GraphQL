@@ -1,16 +1,49 @@
-const AWS = require("aws-sdk");
+require("dotenv").config();
 
-exports.handler = (event, context, callback) => {
-  console.log("Got an Invoke Request: " + event.field);
+const { createPatientEntry, listPatients } = require("./lib/services/Patient");
+
+const {
+  handleRequestArguments,
+  handleResponseObject
+} = require("./lib/utils/helpers");
+
+let errors = null;
+
+exports.handler = async (event, context, callback) => {
   switch (event.field) {
     case "createPatient":
-      callback(null, event);
+      errors = handleRequestArguments(event.arguments, [
+        "firstName",
+        "lastName",
+        "walletAddress",
+        "userId"
+      ]);
+      if (errors) {
+        handleResponseObject({
+          error: true,
+          message: "Invalid parameter(s) provided",
+          data: errors
+        });
+      }
+      await createPatientEntry(event.arguments, response => {
+        if (response.error) {
+          callback(response.message);
+        } else {
+          callback(null, response);
+        }
+      });
       break;
     case "getPatients":
-      callback(null, []);
+      await listPatients(response => {
+        if (response.error) {
+          callback(response.message);
+        } else {
+          callback(null, response);
+        }
+      });
       break;
     default:
-      callback("Unknown field, unable to resolve" + event.field, null);
+      callback(`Unknown field, unable to resolve ${event.field}`, null);
       break;
   }
 };
